@@ -1,4 +1,4 @@
-html, body {
+/*html, body {
   margin-right: 10px;
   color: #333;
   background-color: #EAEAEA;
@@ -55,4 +55,10 @@ circle {
 
 circle:hover {
   opacity: .4;
+} */
+
+.domain {
+  stroke: black;
+  fill: none;
+  stroke-width: "3";
 }
