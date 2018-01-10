@@ -2,7 +2,7 @@ angular.module('viz', []);
 
 
 
-angular.module('viz').controller('lastfmCtrl', ['$scope','$window',
+angular.module('viz').controller('studentScatter', ['$scope','$window',
 
   function ($scope, $window) {
  
@@ -21,10 +21,12 @@ angular.module('viz').controller('lastfmCtrl', ['$scope','$window',
     
       if($scope.activeStudent === arguments[3]){
         $scope.activeStudent = undefined;
+
       }
       else{
 
-        $scope.activeStudent = arguments[3]
+        $scope.activeStudent = arguments[3];
+
 
       }
     })
@@ -80,29 +82,48 @@ angular.module('viz').directive('scatterChart', [
     
         var xAxis = d3.svg.axis()
             .scale(x)
+            .orient("top")
+            .innerTickSize(-height)
+            .outerTickSize(0)
+            .tickPadding(10)
             //.orient("bottom")
             
 
         var yAxis = d3.svg.axis()
             .scale(y)
-            .orient("right")
+            .orient("left")
+            .innerTickSize(-width)
+            .outerTickSize(0)
+            .tickPadding(10)
 
-        var selection = chart.selectAll(".series")
-          .data(data, function (d, i) { return i })
+
+        var yAxisGrid = yAxis.ticks(6)
+        var xAxisGrid = xAxis.ticks(6)//.tickFormat("").orient("top")
+        var selection = chart.selectAll(".series").data(data, function (d, i) { return i })
+          
 
 
 
 
       var SVG2 = selection.enter().append("g")
 
-   SVG2.append("g")
-        .attr("class", "xaxis")
+     chart.append("g")
+     .classed('x', true)
+     .classed('grid', true)
+     .call(xAxisGrid);
+
+     chart.append("g")
+     .classed('y', true)
+     .classed('grid', true)
+     .call(yAxisGrid)
+
+   chart.append("g")
+        .attr("class", "xAxis")
         .attr("transform", "translate(0," + height + ")")
-        .call(xAxis);
+        .call(xAxis); 
       
- SVG2.append("g")
+ chart.append("g")
         .attr("class", "yaxis")
-        //.attr("transform", "translate(" + width + ",0)")
         .call(yAxis);
 
 
@@ -138,9 +159,9 @@ angular.module('viz').directive('scatterChart', [
           var enter3 = enter2.enter()
 
 
-          enter3.append("circle")
+          var circle = enter3.append("circle")
           .on("click", function(a,b,c){
-         
+                  console.log(a,b,c,"abc")
                  $scope.$emit('graphClick', a, b, c)
                  $scope.$apply(update)
            
@@ -158,6 +179,62 @@ angular.module('viz').directive('scatterChart', [
         })
         .attr("cx", function(d){ return x(d.x);})
         .attr("cy", function(d) { return y(d.y);})
+/*
+        circle.append("rect")
+        .attr("x", function(a,b,c){ console.log(a,b,c,"abc in rectangle append");return x(a.x) - 20})
+       .attr("y", function(d){return y(d.y) - 40})
+       .attr("width", 40)
+       .attr("height", 20)
+       .attr("fill","gray")
+       .attr("opacity", function(d, idx, dataIdx){
+         if(dataIdx === $scope.activeStudent){
+            return 1;
+
+          }
+          else{
+            return 0;
+          }
+        })
+*/
+       var label = enter1.selectAll(".label")
+       .data(function(d){return d;})
+       .enter()
+
+       label.append("rect")
+       .attr("x", function(d){ return x(d.x) - 20})
+       .attr("y", function(d){return y(d.y) - 40})
+       .attr("width", 40)
+       .attr("height", 20)
+       .attr("fill","gray")
+       .attr("opacity", function(d, idx, dataIdx){
+         if(dataIdx === $scope.activeStudent){
+            return 1;
+
+          }
+          else{
+            return 0;
+          }
+        })
+      
+       
+       label.append("text")
+       .attr("x", function(d){ return x(d.x) - 20})
+       .attr("y", function(d){return y(d.y) - 20})
+      .text(function (d) { return d.y.toString() + "Min."})
+         .attr("opacity", function(d, idx, dataIdx){
+         if(dataIdx === $scope.activeStudent){
+            return 1;
+
+          }
+          else{
+            return 0;
+          }
+        })
+         .attr("font-size", "14px")
+
+
+
+       
 
 /*
         enter.append("text")
