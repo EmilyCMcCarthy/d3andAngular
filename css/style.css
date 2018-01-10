@@ -1,0 +1,58 @@
+html, body {
+  margin-right: 10px;
+  color: #333;
+  background-color: #EAEAEA;
+  font-size: 1em;
+  font-family: Voltaire, helvetica, sans-serif;
+}
+
+.container {
+  width: 80%;
+}
+
+@media (max-width: 768px) {
+  html, body {
+    margin-right: 20px;
+  }
+}
+
+p {
+  margin: 0px;
+}
+
+svg {
+  border: 2px solid rgba(100, 100, 100, 0.5);
+  border-radius: 10px;
+  background-color: rgba(45, 45, 45, 0.5);
+}
+
+.chart {
+  padding: 15px;
+}
+
+text {
+  font-size: 10px;
+  pointer-events: none;
+  fill: #fff;
+}
+
+#loading {
+  font-size: 22px;
+  fill: #333;
+}
+
+.number {
+  font-size: 32px;
+  fill: #fff;
+  opacity: .8;
+}
+
+circle {
+  opacity: .6;
+  stroke: white;
+  stroke-width: 1px;
+}
+
+circle:hover {
+  opacity: .4;
+}
