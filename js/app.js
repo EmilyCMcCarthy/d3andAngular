@@ -7,8 +7,10 @@ angular.module('viz').controller('studentScatter', ['$scope','$window',
   function ($scope, $window) {
  
     $scope.d3Data = [[{x: 5, y:67, active: false}, {x:25, y: 96, active: false}, {x:45, y:50, active: false}, {x:65, y: 49, active: false}, {x:85, y:47, active: false}], [{x: 5, y: 28, active: false}, {x: 25, y: 39, active: false}, {x: 45, y: 99, active: false}, {x: 65, y: 77, active: false}, {x: 85, y: 69, active: false}]]
-    $scope.activeStudent = 0;
+    $scope.activeStudent = undefined;
+    $scope.activeObj = {type: "student", student: null}
 
+    console.log($scope.d3Data, "scope.d3Data in controller")
 
     $window.addEventListener('resize', function () {
       $scope.$broadcast('windowResize');
@@ -17,19 +19,35 @@ angular.module('viz').controller('studentScatter', ['$scope','$window',
 
     $scope.$on('graphClick', function(){
 
+      console.log("graphClick was heard")
       var studentDataset = $scope.d3Data[arguments[3]];
     
-      if($scope.activeStudent === arguments[3]){
+      if($scope.activeObj.student === arguments[3]){
+       // console.log("active student === arguments[3")
+        //console.log($scope.activeStudent, arguments[3])
         $scope.activeStudent = undefined;
+        $scope.activeObj.student = null;
+        
+        //$scope.$broadcast("updateChart")
 
       }
       else{
 
+        //console.log("active student is not equal to arguments[3]")
+        //console.log($scope.activeStudent, arguments[3])
         $scope.activeStudent = arguments[3];
+        $scope.activeObj.student = arguments[3];
+        //console.log($scope, "$scope in controller")
+        //$scope.$broadcast("updateChart")
 
 
       }
+        console.log($scope, "$scope in controller")
+        $scope.$broadcast("updateChart")
+
     })
+
+    
 
   }
 ]);  
@@ -50,6 +68,8 @@ angular.module('viz').directive('scatterChart', [
         .attr("viewBox", "0 0 " + (width + margin.right + margin.left) + " " + (height + margin.top + margin.bottom));
 
       var chart = svg.append("g");
+      console.log($scope,"$scope HELLO");
+      //console.log(this,"this")
 
       chart.append("text").attr("id", "loading")
         .text("Loading...")
@@ -57,8 +77,9 @@ angular.module('viz').directive('scatterChart', [
 
       var update = function () {
         var data = $scope.d3Data;
+        //console.log(data, "data in Update")
+        console.log($scope, "$scope in Update")
 
-       
 
 
         var valueline = d3.svg.line()
@@ -132,8 +153,9 @@ angular.module('viz').directive('scatterChart', [
       .attr("class","line")
       .attr("stroke", "black")
       .attr("stroke-width", function(d, idx){
+          console.log($scope.activeStudent, idx,"scope.activeStudent === idx?")
+        if(idx === $scope.activeObj.student){
 
-        if(idx === $scope.activeStudent){
             return 3;
         }
         else{
@@ -161,15 +183,19 @@ angular.module('viz').directive('scatterChart', [
 
           var circle = enter3.append("circle")
           .on("click", function(a,b,c){
-                  console.log(a,b,c,"abc")
-                 $scope.$emit('graphClick', a, b, c)
-                 $scope.$apply(update)
+                  //console.log(a,b,c,"abc")
+
+                $scope.$emit('graphClick', a, b, c)
+                 //$scope.$apply(update)
+
            
           })
           .attr("class", "point")
         .attr("r", 5)
         .attr("fill", function(d, idx, dataIdx){
-          if(dataIdx === $scope.activeStudent){
+          //console.log(d,idx,dataIdx, "checking the fill")
+          //console.log($scope.activeStudent, "$scope.activeStudent -- checking")
+          if(dataIdx === $scope.activeObj.student){
             return "red";
 
           }
@@ -207,7 +233,8 @@ angular.module('viz').directive('scatterChart', [
        .attr("height", 20)
        .attr("fill","gray")
        .attr("opacity", function(d, idx, dataIdx){
-         if(dataIdx === $scope.activeStudent){
+        //console.log(arguments, "arguments")
+         if(dataIdx === $scope.activeObj.student){
             return 1;
 
           }
@@ -222,7 +249,7 @@ angular.module('viz').directive('scatterChart', [
        .attr("y", function(d){return y(d.y) - 20})
       .text(function (d) { return d.y.toString() + "Min."})
          .attr("opacity", function(d, idx, dataIdx){
-         if(dataIdx === $scope.activeStudent){
+         if(dataIdx === $scope.activeObj.student){
             return 1;
 
           }
@@ -276,7 +303,23 @@ angular.module('viz').directive('scatterChart', [
       }
 
       $scope.$on('windowResize',resize);
+       $scope.$on('updateChart', function(){//console.log("heard in the directive from $scope.on")
+          console.log($scope, "scope as heard from the $scope.on")
+          update()
+      })  
       $scope.$watch('d3Data', update);
+      /*$scope.$watch('activeObj', function(){
+        console.log("activeObj has changed")
+      }) */
+     // $scope.$watch('activeStudent', function(){console.log("activeStudentHasChanged")}); // Doesn't seem to work? Because it is a number?
+      /*$scope.$watch('activeStudent', function(newVal, oldVal){
+        console.log(newVal, oldVal, "new and old in watcher")
+        if(newVal){
+          console.log("heard from watching activeStudent")
+        console.log($scope, "scope from watcher")
+          //update();
+        }
+      })*/
      
 
 
@@ -284,8 +327,14 @@ angular.module('viz').directive('scatterChart', [
     return {
       template: '<div class="chart col-sm-12 col-md-12 col-lg-12 col-xl-12"></div>',
       replace: true,
-      link: link, 
-      restrict: 'E' 
+    
+      scope: {
+        d3Data: '=data',
+        activeStudent: '=active',
+        activeObj: '=activeobj'
+      },
+      link: link,
+      restrict: 'E' // "Make this an html element"
     };
 }]);
 
