@@ -13,6 +13,21 @@ angular.module('viz').controller('studentScatter', ['$scope','$window',
     $scope.startMonth = "September 2016";
     $scope.numberOfMonths = 7;
 
+    $scope.myFunc = function(){
+      console.log("myFunc")
+    }
+    $scope.clickHelp = function(id){
+      if($scope.activeObj.student === id){
+        $scope.activeObj.previousStudent = id;
+        $scope.activeObj.student = null;
+      }
+      else{
+        $scope.activeObj.previousStudent = $scope.activeObj.student;
+        $scope.activeObj.student = id;
+      }
+
+      $scope.$broadcast("updateChart")
+    }
 
 
     var createMonthLabels = function(monthString){
@@ -72,6 +87,7 @@ angular.module('viz').controller('studentScatter', ['$scope','$window',
 
       var formatData = function(initialData){ 
       var resArr = [];
+    
 
       for(let i =0 ; i < initialData.length; i++){
         var dataArr;
@@ -107,12 +123,14 @@ angular.module('viz').controller('studentScatter', ['$scope','$window',
         resArr.push(dataArr);
       }
 
-      return resArr;
+      
+      return resArr
   }
 
 
-    $scope.formattedData = formatData($scope.rawData);
 
+    $scope.formattedData = formatData($scope.rawData);
+ 
 
     $scope.$on('graphClick', function(){
 
@@ -146,6 +164,35 @@ angular.module('viz').controller('studentScatter', ['$scope','$window',
 
 
 
+angular.module('viz').directive('studentList', [function(){
+
+    var link = function($scope, $el, $attrs){
+      console.log($scope, "scope in Student list directive")
+      console.log($el, $el[0], "el and el0")
+      var svg = d3.select($el[0]).append("svg")
+      .attr({width: 200, height: 1000})
+       .attr("viewBox", "0 0 " + (200 + 40 ) + " " + (1000+ 40));
+
+    }
+
+
+      return {
+      template: '<div class="studentlist"></div>',
+      replace: true,
+    
+      scope: {
+        //d3Data: '=data',
+        //activeStudent: '=active',
+        activeObj: '=activeobj',
+        //startMonth: '=start',
+        //numberOfMonth: '=duration',
+        rawData: '=students'
+     
+      },
+      link: link,
+      restrict: 'E' // "Make this an html element"
+    };
+}]) 
 angular.module('viz').directive('scatterChart', [
 
   function () {
@@ -238,13 +285,16 @@ angular.module('viz').directive('scatterChart', [
       .attr("height", height)
       .attr("fill",function(d){
         if(d % 2 === 0){
-          return "gray"
+          return "#ffffff"
         }
         else{
-          return "lightblue"
+          return "#f9f9f7"
+
         }
       })
     
+
+      
 
  
 
@@ -270,12 +320,47 @@ angular.module('viz').directive('scatterChart', [
 
       var SVG2 = selection.enter().append("g")
 
+
+      var enter1 = SVG2.attr("class", function(d,i){return i})
+
+     // console.log("Are my changes having any effect")
+
+      var enter2 = enter1.selectAll(".point")
+      .data(function(d){ return d;})
+          var enter3 = enter2.enter()
+          var circle = enter3.append("circle")
+          .on("click", function(a,b,c){
+          
+            
+                $scope.$emit('graphClick', a, b, c)      
+          })
+          //.attr("class", "point")
+          .attr("class", function(a,b,c){
+            return "point_series" + a.id
+          })
+        .attr("r", 5)
+        .attr("fill", function(d, idx, dataIdx){
+
+          if(d.id === $scope.activeObj.student){
+            return "#ef6640";
+
+          }
+          else{
+            return "#7a9ef2";
+          }
+        })
+
+        .attr("cx", function(d){ return x(d.x);})
+        .attr("cy", function(d) { return y(d.y);})
+
+
+
       SVG2.append("path")
       .attr("class",function(d){
 
         
       return "display_series" + d[0].id}) //".line_series"
-      .attr("stroke", "black")
+      .attr("stroke", "#ef6640")
       /*
       .attr("stroke-width", function(d, idx){
 
@@ -296,35 +381,6 @@ angular.module('viz').directive('scatterChart', [
         return valueline(d)
       })  
 
-      var enter1 = SVG2.attr("class", function(d,i){return i})
-
-      var enter2 = enter1.selectAll(".point")
-      .data(function(d){ return d;})
-          var enter3 = enter2.enter()
-          var circle = enter3.append("circle")
-          .on("click", function(a,b,c){
-          
-            
-                $scope.$emit('graphClick', a, b, c)      
-          })
-          //.attr("class", "point")
-          .attr("class", function(a,b,c){
-            return "point_series" + a.id
-          })
-        .attr("r", 5)
-        .attr("fill", function(d, idx, dataIdx){
-
-          if(d.id === $scope.activeObj.student){
-            return "red";
-
-          }
-          else{
-            return "blue";
-          }
-        })
-
-        .attr("cx", function(d){ return x(d.x);})
-        .attr("cy", function(d) { return y(d.y);})
 
        var label = enter1.selectAll(".label")
        .data(function(d){return d;})
@@ -335,7 +391,7 @@ angular.module('viz').directive('scatterChart', [
        .attr("y", function(d){return y(d.y) - 40})
        .attr("width", 40)
        .attr("height", 20)
-       .attr("fill","gray")
+       .attr("fill","#5d5d5c")
         .attr("class",function(d){
 
         
@@ -372,9 +428,34 @@ angular.module('viz').directive('scatterChart', [
           }
         })
          .attr("font-size", "14px")
+         .attr("fill", "#ece2e5")
+
+
+           label.append("text")
+       .attr("x", function(d){ return x(d.x) })
+       .attr("y", function(d){return y(d.y)})
+        .attr("class",function(d){
+
+        
+      return "display_series_point" + d.id})
+      .text(function (d) { if(d.y || d.y === 0) {return d.name}})
+         .attr("opacity", function(d, idx, dataIdx){
+
+         if(d.id === $scope.activeObj.student){
+            return 1;
+
+          }
+          else{
+            return 0;
+          }
+        })
+         .attr("font-size", "14px")
+         .attr("fill", "#ece2e5")
+
         resize();
 
       };
+
 
 
       var updateActive = function(){
@@ -384,8 +465,8 @@ angular.module('viz').directive('scatterChart', [
 
         //CIRCLES
         
-      d3.selectAll(".point_series" + $scope.activeObj.student).attr("fill","red")
-      d3.selectAll(".point_series" + $scope.activeObj.previousStudent).attr("fill","blue")
+      d3.selectAll(".point_series" + $scope.activeObj.student).attr("fill","#ef6640")
+      d3.selectAll(".point_series" + $scope.activeObj.previousStudent).attr("fill","#7a9ef2")
       
 
         // CONNECTING LINE
@@ -412,10 +493,12 @@ angular.module('viz').directive('scatterChart', [
        $scope.$on('updateChart', function(){//console.log("heard in the directive from $scope.on")
           console.log($scope, "scope as heard from the $scope.on")
           
-          //update()
+         // update()
           updateActive();
       })  
+
       $scope.$watch('d3Data', update);
+
 
 
 

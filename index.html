@@ -10,13 +10,27 @@
     <script src="bower_components/d3/d3.min.js"></script>
     <script src="bower_components/moment/min/moment.min.js"></script>
     <script src="https://d3js.org/d3-axis.v1.min.js"></script> 
-    <script src="js/app.js"></script>
+    <script src="js/app.js"></script> 
   </head>
   <body ng-app="viz" ng-controller="studentScatter">
     <div>
- 
-      <scatter-chart active="activeStudent" data="formattedData" elephant="elephant" activeobj="activeObj" start="startMonth" duration="numberOfMonths" labels="monthLabels"></scatter-chart>
-   
+   <student-list students="rawData" activeobj="activeObj"></student-list>
+
+     <scatter-chart active="activeStudent" data="formattedData" elephant="elephant" activeobj="activeObj" start="startMonth" duration="numberOfMonths" labels="monthLabels"></scatter-chart>
+     
+      <div  ng-repeat="studentD in rawData" activeobj="{{activeObj}}">
+        <button ng-click="clickHelp(studentD.id)"  ng-style="{backgroundColor: activeObj.student === studentD.id ? '#eb7e61' : '#f9f9f7', color: activeObj.student === studentD.id ? '#fdf7f5' : '#253f73'}" >
+        <h3><span>{{studentD.name}}
+
+          </span>
+          <span>{{studentD.id}}
+          </span>
+        </h3>
+
+      </button>
+      </div>
+    
+
     </div>
 
   </body>
