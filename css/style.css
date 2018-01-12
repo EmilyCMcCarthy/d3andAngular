@@ -58,7 +58,7 @@ circle:hover {
 } */
 
 .grid .tick {
-    stroke: lightgrey;
+    stroke: lightgray;
     opacity: 0.7;
 }
 .grid path {
@@ -66,19 +66,22 @@ circle:hover {
 }
 .axis {
     shape-rendering: crispEdges;
+
 }
 .axis line {
     fill: none;
     shape-rendering: crispEdges;
-    stroke: black;
+    stroke: "#e3e1dc";
 }
+
+
 .y.axis line, .y.axis path {
     fill: none;
-    stroke: lightgrey;
+    stroke: #e3e1dc;
 }
 
 .domain {
-  stroke: black;
+  stroke: "purple"/*"#e3e1dc"; */
   fill: none;
   stroke-width: "3";
 }
