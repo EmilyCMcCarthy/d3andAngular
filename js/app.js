@@ -441,15 +441,16 @@ chart
           .attr("transform", function(d){ 
             console.log("d in transform", d)
               let yP = y(d.value)  - 2*space - triangleL*Math.sqrt(2)/2
-              return "rotate(45 " + x1(d.cat) + " " + yP + ")"})
+              let xP = x1(d.cat) +x1.rangeBand()/2 + x0(d.month)
+              return "rotate(45 " + xP + " " + yP + ")"})
               //return "translate(" + x0(d.month) + ",0), rotate(45" + x1(d.month) + " " + yP + ")"})
           //"rotate(45 " + x(d.x) + " " + yP+  ")"})
           //.attr("transform", function(d){ return "rotate(45)"})
-          .style("fill", "blue")
+          .style("fill", "gray")
             .attr("x",function(d) { 
          
-        return x1(d.cat) - labelW / 2 + x1.rangeBand()/2 + x0(d.month)})
-      .attr("y", function(d){return y(d.value) - 2*space - labelH})
+        return x1(d.cat)+ x1.rangeBand()/2 + x0(d.month)})
+      .attr("y", function(d){return  y(d.value)  - 2*space - triangleL*Math.sqrt(2)/2})
       .attr("width", triangleL)
       .attr("height", triangleL)
       .attr("opacity", function(d, idx, dataIdx){
