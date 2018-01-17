@@ -22,8 +22,9 @@
 
     <!-- <bar-chart students="goalData" activeobj="activeObj"></bar-chart> -->
     <bar-chart-multi students="goalData" activeobj="activeObj"></bar-chart-multi> 
+    <student-list students="goalStudentData" activeobj="activeObj"></student-list>
      
-      <div  ng-repeat="studentD in rawData" activeobj="{{activeObj}}">
+      <!-- <div  ng-repeat="studentD in rawData" activeobj="{{activeObj}}">
         <button ng-click="clickHelp(studentD.id)"  ng-style="{backgroundColor: activeObj.student === studentD.id ? '#eb7e61' : '#f9f9f7', color: activeObj.student === studentD.id ? '#fdf7f5' : '#253f73'}" >
         <h3><span>{{studentD.name}}
 
@@ -33,7 +34,7 @@
         </h3>
 
       </button>
-      </div>
+      </div> -->
     
 
     </div>

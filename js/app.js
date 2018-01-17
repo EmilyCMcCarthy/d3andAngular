@@ -1,19 +1,18 @@
 angular.module('viz', []);
 
 
-
+/// BEGIN - CONTROLLER 
 angular.module('viz').controller('studentScatter', ['$scope','$window', 
 
   function ($scope, $window) {
  
     $scope.d3Data = [[{x: 5, y:67, active: false}, {x:25, y: 96, active: false}, {x:45, y:50, active: false}, {x:65, y: 49, active: false}, {x:85, y:47, active: false}], [{x: 5, y: 28, active: false}, {x: 25, y: 39, active: false}, {x: 45, y: 99, active: false}, {x: 65, y: 77, active: false}, {x: 85, y: 69, active: false}]]
-    $scope.activeStudent = undefined;
     $scope.activeObj = {type: "student", student: null, previousStudent: null, cat: null, previousCat: null}
     $scope.rawData = [{"id":1, "name":"Jane", "data": [{"month": "September 2016", "value":1}, {"month": "October 2016", "value":21}, {"month": "November 2016", "value": 287}, {"month": "December 2016", "value": 150}, {"month": "January 2017", "value": 115}]},{"id":2, "name":"Christopher", "data": [{"month": "September 2016", "value":79}, {"month": "October 2016", "value": 199}, {"month": "November 2016", "value":156}, {"month": "December 2016", "value": 177}, {"month": "January 2017", "value": 49}]}, {"id":3, "name":"Max", "data": [{"month": "September 2016", "value": 280}, {"month": "October 2016", "value":284}, {"month": "November 2016", "value": 90}, {"month": "December 2016", "value": null}, {"month": "January 2017", "value": 49}]}];
     $scope.startMonth = "September 2016";
     $scope.numberOfMonths = 5;
-    $scope.goalData =[{month: "A", value: 5, cat: "GoalMet", ids: [1,2,3,4,5]}, {month: "A", value: 3, cat: "GoalNotMet", ids: [6,7,8]}, {month: "A", value: 2, cat: "GoalExceeded", ids: [9,10]},{month: "B", value: 3, cat: "GoalMet", ids: [1,2,3]}, {month: "B", value: 5, cat: "GoalNotMet", ids: [4,5,6,7,8]}, {month: "B", value: 2, cat: "GoalExceeded", ids: [9,10]}, {month: "C", value: 2, cat: "GoalMet", ids: [10,9]}, {month: "C", value: 4, cat: "GoalNotMet", ids: [1,2,3,8]}, {month: "C", value: 4, cat: "GoalExceeded", ids: [4,5,6,7]}]//[{"id":1, "name":"Jane", "data": [{"month": "September 2016", "minuteGoal":2, "dayGoal": 1}, {"month": "October 2016", "minuteGoal":2, "dayGoal": 3}, {"month": "November 2016", "minuteGoal": 3, "dayGoal": 3}, {"month": "December 2016", "minuteGoal": 2, "dayGoal": 2}, {"month": "January 2017", "minuteGoal": 1, "dayGoal": 3}]},{"id":2, "name":"Christopher", "data": [{"month": "September 2016", "minuteGoal": 1, "dayGoal": 2}, {"month": "October 2016", "minuteGoal": 2, "dayGoal": 1}, {"month": "November 2016", "minuteGoal": 1, "dayGoal": 1}, {"month": "December 2016", "minuteGoal": 3, "dayGoal": 3}, {"month": "January 2017", "minuteGoal": 1, "dayGoal": 3}]}, {"id":3, "name":"Max", "data": [{"month": "September 2016", "minuteGoal": 3, "dayGoal": 2}, {"month": "October 2016", "minuteGoal": 1, "dayGoal": 3}, {"month": "November 2016", "minuteGoal": 3, "dayGoal": 1}, {"month": "December 2016", "minuteGoal": 3, "dayGoal": 2}, {"month": "January 2016", "minuteGoal": 2, "dayGoal": 3}]}]
-
+    $scope.goalData =[{month: "A", value: 5, cat: "GoalMet", ids: [1,9,5,4,6]}, {month: "A", value: 3, cat: "GoalNotMet", ids: [3,7,8]}, {month: "A", value: 2, cat: "GoalExceeded", ids: [2,10]},{month: "B", value: 3, cat: "GoalMet", ids: [1,2,3]}, {month: "B", value: 5, cat: "GoalNotMet", ids: [4,5,6,7,8]}, {month: "B", value: 2, cat: "GoalExceeded", ids: [9,10]}, {month: "C", value: 2, cat: "GoalMet", ids: [10,9]}, {month: "C", value: 4, cat: "GoalNotMet", ids: [1,4,3,8]}, {month: "C", value: 4, cat: "GoalExceeded", ids: [2,5,6,7]}]//[{"id":1, "name":"Jane", "data": [{"month": "September 2016", "minuteGoal":2, "dayGoal": 1}, {"month": "October 2016", "minuteGoal":2, "dayGoal": 3}, {"month": "November 2016", "minuteGoal": 3, "dayGoal": 3}, {"month": "December 2016", "minuteGoal": 2, "dayGoal": 2}, {"month": "January 2017", "minuteGoal": 1, "dayGoal": 3}]},{"id":2, "name":"Christopher", "data": [{"month": "September 2016", "minuteGoal": 1, "dayGoal": 2}, {"month": "October 2016", "minuteGoal": 2, "dayGoal": 1}, {"month": "November 2016", "minuteGoal": 1, "dayGoal": 1}, {"month": "December 2016", "minuteGoal": 3, "dayGoal": 3}, {"month": "January 2017", "minuteGoal": 1, "dayGoal": 3}]}, {"id":3, "name":"Max", "data": [{"month": "September 2016", "minuteGoal": 3, "dayGoal": 2}, {"month": "October 2016", "minuteGoal": 1, "dayGoal": 3}, {"month": "November 2016", "minuteGoal": 3, "dayGoal": 1}, {"month": "December 2016", "minuteGoal": 3, "dayGoal": 2}, {"month": "January 2016", "minuteGoal": 2, "dayGoal": 3}]}]
+    $scope.goalStudentData = [{"id": 1, "name": "Jane A."},{"id": 2, "name": "Christopher C."},{"id":3, "name": "Jehosephat D."},{"id": 4, "name": "Janice E."},{"id": 5, "name": "Betty F."},{"id": 6, "name": "Sarah F."},{"id": 7, "name": "Rose G."},{"id": 8, "name": "Mary G."},{"id": 9, "name": "Benjamin H."}, {"id": 10, "name": "Danielle H."}]
 
 
     var createMonthLabels = function(monthString){
@@ -33,7 +32,7 @@ angular.module('viz').controller('studentScatter', ['$scope','$window',
       return arrOfMonths;
     }
 
-    $scope.monthLabels =createMonthLabels();
+    $scope.monthLabels = createMonthLabels();
 
 
 
@@ -119,37 +118,84 @@ angular.module('viz').controller('studentScatter', ['$scope','$window',
 
     $scope.$on('graphClick', function(){
 
-     if(arguments[1].id){
-         if($scope.activeObj.student === arguments[1].id){
+      //console.log("arguments", arguments)
+
+     if(arguments[4]==="student"){
+
+
+        if($scope.activeObj.student === arguments[1].id){
        
         $scope.activeStudent = undefined;
         $scope.activeObj.student = null;
         $scope.activeObj.previousStudent = arguments[1].id
+        $scope.activeObj.type = "student"
+
+        if($scope.activeObj.previousCat){
+          $scope.activeObj.previousCat = null;
+          $scope.activeObj.previousCatIds = [];
+        }
         
 
       }
+     
       else{
-
+        if($scope.activeObj.cat){
+          $scope.activeObj.previousCat = $scope.activeObj.cat 
+          $scope.activeObj.previousCatIds = $scope.activeObj.catIds;
+          $scope.activeObj.cat = null;
+          $scope.activeObj.catIds = [];
+        }
+        else{
+          $scope.activeObj.previousCat = null;
+          $scope.activeObj.previousCatIds = [];
+        }
        
         $scope.activeObj.previousStudent = $scope.activeObj.student;
         $scope.activeStudent = arguments[1].id;
         $scope.activeObj.student = arguments[1].id;
+        $scope.activeObj.type = "student"
 
 
-      }}
-      else{
+      }
+
+
+      }
+      /*else if(){
+
+      }*/
+      else if(arguments[4]==="goal"){
      
-        if($scope.activeObj.cat === arguments[1].cat){
+        if($scope.activeObj.cat === arguments[1].cat + "_" + arguments[1].month){
+      
           $scope.activeObj.cat = null;
-          $scope.activeObj.previousCat = arguments[1].cat
+          $scope.activeObj.catIds = [];
+          $scope.activeObj.previousCat = arguments[1].cat + "_" + arguments[1].month;
+          $scope.activeObj.previousCatIds = arguments[1].ids;
+
+          $scope.activeObj.type = "cat"
+
+          if($scope.activeObj.previousStudent){
+            $scope.activeObj.previousStudent = null;
+          }
         }
         else{
+    
+          if($scope.activeObj.student || $scope.activeObj.student === 0){
+            $scope.activeObj.previousStudent = $scope.activeObj.student;
+            $scope.activeObj.student = null;
+          }
+          else{
+            $scope.activeObj.previousStudent = null;
+          }
           $scope.activeObj.previousCat = $scope.activeObj.cat;
-          $scope.activeObj.cat = arguments[1].cat
+          $scope.activeObj.previousCatIds = $scope.activeObj.catIds;
+          $scope.activeObj.cat = arguments[1].cat + "_" + arguments[1].month;
+          $scope.activeObj.catIds = arguments[1].ids;
+          $scope.activeObj.type = "cat"
         }
       }
      //}
-     
+      
       
         $scope.$broadcast("updateChart")
 
@@ -159,8 +205,10 @@ angular.module('viz').controller('studentScatter', ['$scope','$window',
 
   }
 ]);  
+// END CONTROLLER
 
 
+// BEGIN STUDENT LIST D3 DIRECTIVE
 
 angular.module('viz').directive('studentList', [function(){
 
@@ -194,6 +242,9 @@ angular.module('viz').directive('studentList', [function(){
       boxes.append("rect")
 
       .attr("x", function(d, i){ return 0})
+      .attr("class", function(d){
+        return "student_list_box_" + d.id;
+      })
       .attr("y", function(d, i){return i*rectH})
       .attr("width", rectW )
       .attr("height", rectH)
@@ -208,7 +259,7 @@ angular.module('viz').directive('studentList', [function(){
       .attr("stroke", "darkgray")
       .on('click', function(a,b,c){
  
-         $scope.$emit('graphClick', a, b, c)   
+         $scope.$emit('graphClick', a, b, c, "student")   
       })
 
       boxes.append("text")
@@ -230,6 +281,9 @@ angular.module('viz').directive('studentList', [function(){
           } */ return  d.name
         })
          .attr("font-size", "40px")
+          .attr("class", function(d){
+          return "student_list_text_" + d.id;
+          })
          .attr("fill", function(d,i){
             if(d.id === $scope.activeObj.student){
               return "#fdf7f5"
@@ -239,29 +293,75 @@ angular.module('viz').directive('studentList', [function(){
             }
          })
 
-      /*.attr("fill",function(d){
-        if(d % 2 === 0){
-          return "#ffffff"
-        }
-        else{
-          return "#f9f9f7"
-
-        }
-      }) */
-      //.attr("fill", "teal")
+     
       .attr("stroke-width", 1)
 
 
       }
 
-      $scope.$watch('activeObj', update);
+      var updateActive = function(){
+      
+          if($scope.activeObj.type === "cat"){
+
+            if($scope.activeObj.previousStudent || $scope.activeObj.previousStudent === 0){
+                  
+                  d3.selectAll(".student_list_box_" + $scope.activeObj.previousStudent).attr("fill", "#f9f9f7")
+                  d3.selectAll(".student_list_text_" + $scope.activeObj.previousStudent).attr("fill","#253f73")
+              }
+
+              if($scope.activeObj.previousCatIds){
+                  for(let i = 0; i < $scope.activeObj.previousCatIds.length; i++ ){
+                     d3.selectAll(".student_list_box_"+ $scope.activeObj.previousCatIds[i]).attr("fill","#f9f9f7")
+                      d3.selectAll(".student_list_text_"+ $scope.activeObj.previousCatIds[i]).attr("fill","#253f73")
+        
+
+                  }
+              }
+              if($scope.activeObj.catIds){
+                for(let i = 0; i < $scope.activeObj.catIds.length; i++ ){
+                
+                    d3.selectAll(".student_list_box_"+ $scope.activeObj.catIds[i]).attr("fill","#eb7e61")
+                    d3.selectAll(".student_list_text_"+$scope.activeObj.catIds[i]).attr("fill","#fdf7f5")
+                  
+                  }
+              }
+
+            
+        }
+        else if($scope.activeObj.type === "student"){
+
+            if($scope.activeObj.previousCat){
+
+                  if($scope.activeObj.previousCatIds){
+                  for(let i = 0; i < $scope.activeObj.previousCatIds.length; i++ ){
+                     d3.selectAll(".student_list_box_"+ $scope.activeObj.previousCatIds[i]).attr("fill","#f9f9f7")
+                      d3.selectAll(".student_list_text_" + $scope.activeObj.previousCatIds[i]).attr("fill","#253f73")
+         
+
+                  }
+              }
+           
+            }
+
+           
+            d3.selectAll(".student_list_box_"+ $scope.activeObj.previousStudent).attr("fill","#f9f9f7")
+            d3.selectAll(".student_list_box_"+ $scope.activeObj.student).attr("fill","#eb7e61")
+        
+
+            d3.selectAll(".student_list_text_"+ $scope.activeObj.previousStudent).attr("fill", "#253f73")
+            d3.selectAll(".student_list_text_"+ $scope.activeObj.student).attr("fill","#fdf7f5")
+
+        }
+
+      }
+
+      $scope.$watch('activeObj', updateActive);
       $scope.$watch('rawData', update);
 
 
          $scope.$on('updateChart', function(){
           
-         // update()
-          update();
+          updateActive();
       })  
 
     }
@@ -275,11 +375,9 @@ angular.module('viz').directive('studentList', [function(){
       replace: true,
     
       scope: {
-        //d3Data: '=data',
-        //activeStudent: '=active',
+     
         activeObj: '=activeobj',
-        //startMonth: '=start',
-        //numberOfMonth: '=duration',
+      
         rawData: '=students'
      
       },
@@ -288,9 +386,10 @@ angular.module('viz').directive('studentList', [function(){
     };
 }]) 
 
+// END STUDENT LIST D3 DIRECTIVE
 
 
-
+// BEGIN BAR CHART D3 DIRECTIVE
 
 angular.module('viz').directive('barChartMulti', [function(){
 
@@ -298,7 +397,7 @@ angular.module('viz').directive('barChartMulti', [function(){
 
 
 
-            var margin = {top: 20, right: 20, bottom: 70, left: 40},
+    var margin = {top: 20, right: 20, bottom: 100, left: 100},
     width = 2000 - margin.left - margin.right,
     height = 1000 - margin.top - margin.bottom;
  
@@ -311,36 +410,35 @@ angular.module('viz').directive('barChartMulti', [function(){
 
       var update = function(){
 
-    
+   
 
         var data = $scope.goalData//[{month: "A", value: 5, cat: "Goal Met", ids: [1,2,3,4,5]}, {month: "A", value: 3, cat: "Goal Not Met", ids: [6,7,8]}, {month: "A", value: 2, cat: "Goal Exceeded", ids: [9,10]},{month: "B", value: 3, cat: "Goal Met", ids: [1,2,3]}, {month: "B", value: 5, cat: "Goal Not Met", ids: [4,5,6,7,8]}, {month: "B", value: 2, cat: "Goal Exceeded", ids: [9,10]}, {month: "C", value: 2, cat: "Goal Met", ids: [10,9]}, {month: "C", value: 4, cat: "Goal Not Met", ids: [1,2,3,8]}, {month: "C", value: 4, cat: "Goal Exceeded", ids: [4,5,6,7]}]//[{month: "A", value: 5, cat: "Goat Met"}, {month:"B", value: 10, cat: "X"}, {month:"A", value: 7, cat: "X"}, {month: "C", value: 4, cat:"Y"}, {month: "A", value: 6, cat:"Y"}]
-        var barOuterPad = 0.2
+        var barOuterPad = 0
         var barPad = 0.1
-        
-        var colorRange = d3.scale.category20();
-        var color = d3.scale.ordinal()
-                        .range(colorRange.range());
+    
+         var color = d3.scale.ordinal()
+                       .domain(["GoalMet", "GoalExceeded", "GoalNotMet"])
+                        .range(["#d8aade", "#d1e4b1", '#f4d0b0'])
 
         var x0 = d3.scale.ordinal()//.rangeRoundBands([0,width],0.1);
                       .domain(data.map(function(d){
                         return d.month;
                       }))
       
-                      .rangeRoundBands([0,width], barPad, barOuterPad)
+                      .rangeRoundBands([0,width], barPad/*, barOuterPad*/)
 
 
         var x1 = d3.scale.ordinal()
-                    .domain(data.map(function(d){
-                        return d.cat
-                    }))
-                    .rangeRoundBands([0,x0.rangeBand()])
+                    //.domain(data.map(function(d){
+                    //    return d.cat
+                    //}))
+                    .domain(["GoalMet","GoalExceeded","GoalNotMet"])
+                    .rangeRoundBands([0,x0.rangeBand()]/*, 0.1, 0.5*/)
 
         //.range([0,width]).rangeRoundBands([0,width],0.1)//.rangeRoundBands([0,width], 0.05);
         var y = d3.scale.linear().range([height, 0]);
 
-        //x.domain([1,2,3])
-        //x.rangePoints([0,500])
-        //x.range([0,width]).domain(data.m)
+       
 
         var xAxis = d3.svg.axis()
                       .scale(x0)
@@ -350,40 +448,87 @@ angular.module('viz').directive('barChartMulti', [function(){
         var yAxis = d3.svg.axis()
                       .scale(y)
                       .orient("left")
-                      .ticks(5);
-
-
-       // x.domain(data.map(function(d){return d.month}))
+                  
+            
 
         y.domain([0, d3.max(data, function(d){return d.value;})*1.25])
 
 
-        var labelW = x0.rangeBand()*0.55//(width)/9 *0.85 // MAX number of months at one time is 9
+        var labelW = x0.rangeBand()*0.55
         var labelH = labelW * 0.4
         var space = labelH / 4;
         var triangleL = space;
 
 
+
+
+chart.append("g")
+  .selectAll("annotations")
+  .data(["A","B","C"])
+  .enter()
+  .append("rect")
+  .attr("x", function(d){
+    return x0(d) - x0.rangeBand()*barPad/2
+  })
+  .attr("y", 0)
+  .attr("height", height)
+  .attr("width", function(){return x0.rangeBand() + x0.rangeBand()*barPad})
+  .attr("fill", function(d,id){
+    if(id % 2 === 0){
+      return  "#f9f9f7"
+    }
+    else{
+      return "#ffffff"
+
+    }
+  })
         chart.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
         .call(xAxis)
-        .selectAll("text")
+       .selectAll("text")
       .style("text-anchor", "end")
       .attr("dx", "-.8em")
       .attr("dy", "-.55em")
       .attr("transform", "rotate(-90)" );
 
-  chart.append("g")
+            var yAxisGrid = yAxis
+                .outerTickSize(0)
+                      .innerTickSize(-width)
+                           .tickPadding(1)
+            .ticks(7)//.orient("left")
+
+     var grid =  chart.append("g")
+     .classed('y', true)
+     .classed('grid', true)
+     .call(yAxisGrid)
+
+     grid.selectAll("text").attr("font-size",20)
+     console.log(grid.selectAll("text"), "grid? text")
+
+chart.append("g")
       .attr("class", "y axis")
       .call(yAxis)
-    .append("text")
+      .selectAll("text")
+         .style("text-anchor", "left")
+      .attr("dx", "-.8em")
+      .attr("dy", "-.55em")
+      .attr("transform", "rotate(-90)" );
+
+    /*.append("text")
       .attr("transform", "rotate(-90)")
       .attr("y", 6)
       .attr("dy", ".71em")
       .style("text-anchor", "end")
-      .text("Value");
+      .text("Value");*/
 
+
+  //.attr("stroke", "blue")
+  //.attr("stroke-width",10)
+  
+  //.attr()
+
+  
 chart
 .append("g")
 .selectAll("bar")
@@ -391,14 +536,11 @@ chart
     .enter()
       .append("rect")
     .attr("transform",function(d){return "translate(" + x0(d.month) + ",0)"})
-      .on('click', function(a,b,c){
-        console.log(a,b,c,"abc in onclick")
-           $scope.$emit('graphClick', a, b, c)    
-      })
+  
       .style("fill", function(d){return color(d.cat)})
 
       .attr("x", function(d) { 
-          console.log(d,"d in x")
+       
         return x1(d.cat); })
       .attr("width", x1.rangeBand())
       .attr("y", function(d) { return y(d.value); })
@@ -411,9 +553,19 @@ chart
       .enter()
       
       label.append("rect")
-        .attr("class", function(d){
-      return d.cat
-     })
+      .attr("class", function(d){
+        var classString = d.cat + "_" + d.month;
+
+      
+        for(let i = 0; i < d.ids.length; i++){
+      
+          classString += " label_student_" + d.ids[i] 
+
+        } 
+      return classString;//d.cat + " " + "hello"
+
+     }) 
+ 
       .attr("transform",function(d){return "translate(" + x0(d.month) + ",0)"})
       .style("fill", "gray")
       .attr("x",function(d) { 
@@ -436,16 +588,22 @@ chart
 
       label.append("rect")
           .attr("class", function(d){
-            return d.cat
-          })
+        var classString = d.cat + "_" + d.month;
+
+        for(let i = 0; i < d.ids.length; i++){
+      
+          classString += " label_student_" + d.ids[i] 
+
+        } 
+      return classString;//d.cat + " " + "hello"
+
+     })
           .attr("transform", function(d){ 
-            console.log("d in transform", d)
+        
               let yP = y(d.value)  - 2*space - triangleL*Math.sqrt(2)/2
               let xP = x1(d.cat) +x1.rangeBand()/2 + x0(d.month)
               return "rotate(45 " + xP + " " + yP + ")"})
-              //return "translate(" + x0(d.month) + ",0), rotate(45" + x1(d.month) + " " + yP + ")"})
-          //"rotate(45 " + x(d.x) + " " + yP+  ")"})
-          //.attr("transform", function(d){ return "rotate(45)"})
+        
           .style("fill", "gray")
             .attr("x",function(d) { 
          
@@ -465,6 +623,60 @@ chart
         })
     
 
+      label.append("line")
+      .attr("transform",function(d){return "translate(" + x0(d.month) + ",0)"})
+      .attr("x1", function(d) { 
+         
+        return x1(d.cat) - labelW / 2 + x1.rangeBand()/2 })
+      .attr("x2", function(d){
+        return x1(d.cat) + labelW /2 + x1.rangeBand()/2
+
+      })
+      .attr("y1", function(d){
+        return y(d.value) - 2*space - labelH
+      })
+      .attr("y2", function(d){
+        return y(d.value) - 2*space - labelH
+      })
+      .attr("class", function(d){
+        var classString = d.cat + "_" + d.month;
+
+        for(let i = 0; i < d.ids.length; i++){
+      
+          classString += " label_student_" + d.ids[i] 
+
+        } 
+      return classString;//d.cat + " " + "hello"
+
+     })
+      .attr("stroke-opacity",0)
+      .attr("stroke-width",10)
+      .attr("stroke",function(d){return color(d.cat)})
+
+
+
+chart
+.append("g")
+.selectAll("Clickable_bar")
+    .data(data)
+    .enter()
+    .append("rect")
+    .attr("transform",function(d){return "translate(" + x0(d.month) + ",0)"})
+      .on('click', function(a,b,c){
+       // console.log(a,b,c,"abc in onclick")
+           $scope.$emit('graphClick', a, b, c, "goal")    
+      })
+      .attr("opacity", 0)
+      //.style("fill", function(d){return color(d.cat)})
+
+      .attr("x", function(d) { 
+    
+        return x1(d.cat); })
+      .attr("width", x1.rangeBand())
+      .attr("y", function(d) { return y(d.value); })
+      .attr("height", function(d) { return height- y(d.value); });
+
+      
 
     /* 
             label.append("rect")
@@ -501,13 +713,39 @@ chart
 
 
       var updateActive = function(){
+    
 
-       d3.selectAll("." + $scope.activeObj.cat).attr("opacity",1).attr("stroke-opacity",1)
-       d3.selectAll("." + $scope.activeObj.previousCat).attr("opacity", 0).attr("stroke-opacity", 0)
+        if($scope.activeObj.type === "cat"){
+
+            if($scope.activeObj.previousStudent || $scope.activeObj.previousStudent === 0){
+              
+                  d3.selectAll(".label_student_"+ $scope.activeObj.previousStudent).attr("opacity", 0).attr("stroke-opacity", 0)
+              }
+
+              d3.selectAll("." + $scope.activeObj.cat).attr("opacity",1).attr("stroke-opacity",1)
+              d3.selectAll("." + $scope.activeObj.previousCat).attr("opacity", 0).attr("stroke-opacity", 0)
+
+            
+        }
+        else if($scope.activeObj.type === "student"){
+
+            if($scope.activeObj.previousCat){
+               d3.selectAll("." + $scope.activeObj.previousCat).attr("opacity", 0).attr("stroke-opacity", 0)
+            }
+
+           
+            d3.selectAll(".label_student_"+ $scope.activeObj.previousStudent).attr("opacity", 0).attr("stroke-opacity", 0)
+            d3.selectAll(".label_student_"+ $scope.activeObj.student).attr("opacity", 1).attr("stroke-opacity", 1)
+          
+
+
+        }
+
+    
 
       }
     
-      console.log("scope in BarChart", $scope)
+   
 
       $scope.$watch('activeObj', updateActive);
       $scope.$on('windowResize',resize);
@@ -538,6 +776,9 @@ chart
       restrict: 'E' // "Make this an html element"
     };
 }]) 
+// END BAR CHART D3 DIRECTIVE
+
+// BEGIN SCATTER PLOT D3 DIRECTIVE
 angular.module('viz').directive('scatterChart', [
 
   function () {
@@ -572,8 +813,7 @@ angular.module('viz').directive('scatterChart', [
       var update = function () {
 
         var data = $scope.d3Data;
-        console.log($scope.d3Data, "scope.d3Data")
-  
+     
 
 
         var mergedData = [].concat.apply([], data);
@@ -583,8 +823,8 @@ angular.module('viz').directive('scatterChart', [
         var yMax = d3.max(mergedData, function(d){return d.y}) * 1.1
       
      
-        console.log($scope, "$scope in Update")
-        console.log(mergedData,"mergedData")
+        console.log($scope, "$scope in Scatter Chart Directive")
+        //console.log(mergedData,"mergedData")
 
         var valueline = d3.svg.line()
           .x(function(d) { return x(d.x); })
@@ -636,6 +876,8 @@ angular.module('viz').directive('scatterChart', [
         .tickFormat(function(d, i){
           return $scope.monthLabels[i]
         })//.tickFormat("").orient("top")
+        //.selectAll("text")
+        //.attr("opacity", 0)
 
         
         var selection = chart.selectAll(".series").data(data, function (d, i) { return i })
@@ -993,7 +1235,7 @@ angular.module('viz').directive('scatterChart', [
       .on("click", function(a,b,c){
           
             
-                $scope.$emit('graphClick', a, b, c)      
+                $scope.$emit('graphClick', a, b, c, "student")      
           })
           //.attr("class", "point")
           .attr("class", function(a,b,c){
@@ -1023,57 +1265,45 @@ angular.module('viz').directive('scatterChart', [
 
 
 
-      var updateActive = function(){
-        //var testing = d3.selectAll(".point_series1");
-     
+      var updateActive = function(){ // FUNCTION THAT IS USED WHEN THE CONTROLLER BROADCASTS AN 'UpdateChart' EVENT
+  
         //CIRCLES
         
-      d3.selectAll(".point_series" + $scope.activeObj.student).attr("fill","#ef6640")
-      d3.selectAll(".point_series" + $scope.activeObj.previousStudent).attr("fill","#7a9ef2")
+        d3.selectAll(".point_series" + $scope.activeObj.student).attr("fill","#ef6640")
+        d3.selectAll(".point_series" + $scope.activeObj.previousStudent).attr("fill","#7a9ef2")
       
 
         // CONNECTING LINE
 
-      d3.selectAll(".display_series" + $scope.activeObj.student).attr("opacity", 1)//.attr("stroke-width", 3);
-       d3.selectAll(".display_series" + $scope.activeObj.previousStudent).attr("opacity",0)
+        d3.selectAll(".display_series" + $scope.activeObj.student).attr("opacity", 1)
+        d3.selectAll(".display_series" + $scope.activeObj.previousStudent).attr("opacity",0)
 
 
         // LABEL RECTANGLES
 
-         d3.selectAll(".display_series_point" + $scope.activeObj.student).attr("opacity",1).attr("stroke-opacity",1)
-
-            d3.selectAll(".display_series_point" + $scope.activeObj.previousStudent).attr("opacity",0).attr("stroke-opacity",0)
-
-
+        d3.selectAll(".display_series_point" + $scope.activeObj.student).attr("opacity",1).attr("stroke-opacity",1)
+        d3.selectAll(".display_series_point" + $scope.activeObj.previousStudent).attr("opacity",0).attr("stroke-opacity",0)
 
       };
 
-      function resize() {
+      var resize = function() {
         svg.attr("width", $el[0].clientWidth);
-        svg.attr("height", $el[0].clientWidth); //It's a square
+        svg.attr("height", $el[0].clientWidth); 
       }
 
+      // WATCHING & LISTENING IN SCATTER PLOT D3 DIRECTIVE
       $scope.$on('windowResize',resize);
-       $scope.$on('updateChart', function(){
-    
-          
-         // update()
-          updateActive();
-      })  
-
+      $scope.$on('updateChart', updateActive)  
       $scope.$watch('d3Data', update);
 
 
-
-
     };
-    return {
-      template: '<div class="chart col-sm-12 col-md-12 col-lg-12 col-xl-12"></div>',
+    return { // OBJECT RETURNED BY SCATTER PLOT D3 DIRECTIVE //previous classes: chart col-sm-12 col-md-12 col-lg-12 col-xl-12
+      template: '<div class="scatter-chart "></div>',
       replace: true,
     
       scope: {
         d3Data: '=data',
-        activeStudent: '=active',
         activeObj: '=activeobj',
         startMonth: '=start',
         numberOfMonth: '=duration',
@@ -1083,5 +1313,6 @@ angular.module('viz').directive('scatterChart', [
       restrict: 'E' // "Make this an html element"
     };
 }]);
+// END SCATTER PLOT D3 DIRECTIVE
 
 
