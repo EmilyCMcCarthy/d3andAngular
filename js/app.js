@@ -413,9 +413,9 @@ angular.module('viz').directive('barChartMulti', [function(){
    
 
         var data = $scope.goalData//[{month: "A", value: 5, cat: "Goal Met", ids: [1,2,3,4,5]}, {month: "A", value: 3, cat: "Goal Not Met", ids: [6,7,8]}, {month: "A", value: 2, cat: "Goal Exceeded", ids: [9,10]},{month: "B", value: 3, cat: "Goal Met", ids: [1,2,3]}, {month: "B", value: 5, cat: "Goal Not Met", ids: [4,5,6,7,8]}, {month: "B", value: 2, cat: "Goal Exceeded", ids: [9,10]}, {month: "C", value: 2, cat: "Goal Met", ids: [10,9]}, {month: "C", value: 4, cat: "Goal Not Met", ids: [1,2,3,8]}, {month: "C", value: 4, cat: "Goal Exceeded", ids: [4,5,6,7]}]//[{month: "A", value: 5, cat: "Goat Met"}, {month:"B", value: 10, cat: "X"}, {month:"A", value: 7, cat: "X"}, {month: "C", value: 4, cat:"Y"}, {month: "A", value: 6, cat:"Y"}]
-        var barOuterPad = 0
+       
         var barPad = 0.1
-    
+       var barOuterPad = barPad / 2;
          var color = d3.scale.ordinal()
                        .domain(["GoalMet", "GoalExceeded", "GoalNotMet"])
                         .range(["#d8aade", "#d1e4b1", '#f4d0b0'])
@@ -425,7 +425,7 @@ angular.module('viz').directive('barChartMulti', [function(){
                         return d.month;
                       }))
       
-                      .rangeRoundBands([0,width], barPad/*, barOuterPad*/)
+                      .rangeRoundBands([0,width], barPad, barOuterPad)
 
 
         var x1 = d3.scale.ordinal()
@@ -468,11 +468,11 @@ chart.append("g")
   .enter()
   .append("rect")
   .attr("x", function(d){
-    return x0(d) - x0.rangeBand()*barPad/2
+    return x0(d) - x0.rangeBand()*(1/(1-barPad))*(barPad/2)
   })
   .attr("y", 0)
   .attr("height", height)
-  .attr("width", function(){return x0.rangeBand() + x0.rangeBand()*barPad})
+  .attr("width", function(){return x0.rangeBand()*(1/(1- barPad))})
   .attr("fill", function(d,id){
     if(id % 2 === 0){
       return  "#f9f9f7"
